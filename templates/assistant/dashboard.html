@@ -4,5 +4,31 @@
 
 {% block content %}
     <h1>Welcome to Your AI Assistant</h1>
-    <!-- Additional content here -->
+    <div class="card">
+        <div class="card-header">
+            Assistants
+        </div>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for assistant in assistants %}
+                                <pre>{{ assistant }}</pre>
+
+                    <tr>
+                        <td>{{ assistant.name }}</td>
+                        <td>{{ assistant.description }}</td>
+                        <td>{{ assistant.created_at }}</td>
+                        <td>{{ assistant.updated }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
