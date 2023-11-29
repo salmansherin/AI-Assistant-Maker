@@ -43,6 +43,19 @@ class EditView(BaseView):
         assistant = self.ai.get_assistant(assistant_id)
         return render(request, 'assistant/edit.html', {'assistant': assistant})
 
+    def post(self, request, assistant_id):
+        # Now you can use the id
+        name = request.POST.get('name')
+        instructions = request.POST.get('instructions')
+        description = request.POST.get('description')
+        attributes = {
+            'name': name,
+            'instructions': instructions,
+            'description': description,
+        }
+        assistant = self.ai.update_assistant(assistant_id, attributes)
+        return JsonResponse(assistant.dict(), safe=False)
+
 
 class ChatView(BaseView):
 
@@ -56,6 +69,7 @@ class ChatView(BaseView):
             'messages': messages_list,
         }
         return render(request, 'assistant/chat.html', context)
+
 
 class ChatAjaxView(BaseView):
 

@@ -28,7 +28,10 @@
                     <td>{{ assistant.description }}</td>
                     <td>{{ assistant.created_at|format_timestamp }}</td>
                     <td>
-                        <a class="btn btn-sm" href="{% url 'test_assistant' assistant.id %}">Test Assistant</a>
+                        <a class="btn btn-sm btn-primary" href="{% url 'edit_assistant' assistant.id %}">Edit
+                            Assistant</a>
+                        <a class="btn btn-sm btn-secondary" href="{% url 'test_assistant' assistant.id %}">Test
+                            Assistant</a>
                     </td>
                 </tr>
             {% endfor %}

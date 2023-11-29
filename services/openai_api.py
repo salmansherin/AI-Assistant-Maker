@@ -25,6 +25,13 @@ class OpenAIApi:
         assistant = self.ai.beta.assistants.create(name=name, instructions=instructions, model='gpt-4')
         return assistant
 
+    def update_assistant(self, assistant_id, attributes):
+
+        assistant = self.ai.beta.assistants.update(assistant_id, name=attributes['name'],
+                                                   instructions=attributes['instructions'],
+                                                   description=attributes['description'])
+        return assistant
+
     def list_assistants(self):
         assistants = self.ai.beta.assistants.list()
         return assistants
