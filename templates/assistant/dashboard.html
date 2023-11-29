@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load date_filters %}
 
 {% block title %}Home - AI Assistant{% endblock %}
 
@@ -7,27 +8,30 @@
     <div class="card">
         <div class="card-header">
             Assistants
+            <div class="float-end">
+                <a class="btn btn-primary btn-sm float-right" href="/create">Create Assistant</a>
+            </div>
         </div>
         <table class="table">
             <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th>Created</th>
-                    <th>Actions</th>
-                </tr>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
             </thead>
             <tbody>
-                {% for assistant in assistants %}
-                                <pre>{{ assistant }}</pre>
-
-                    <tr>
-                        <td>{{ assistant.name }}</td>
-                        <td>{{ assistant.description }}</td>
-                        <td>{{ assistant.created_at }}</td>
-                        <td>{{ assistant.updated }}</td>
-                    </tr>
-                {% endfor %}
+            {% for assistant in assistants %}
+                <tr>
+                    <td>{{ assistant.name }}</td>
+                    <td>{{ assistant.description }}</td>
+                    <td>{{ assistant.created_at|format_timestamp }}</td>
+                    <td>
+                        <a class="btn btn-sm" href="{% url 'test_assistant' assistant.id %}">Test Assistant</a>
+                    </td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
     </div>
