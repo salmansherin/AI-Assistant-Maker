@@ -33,10 +33,28 @@ class OpenAIApi:
         assistant = self.ai.beta.assistants.retrieve(assistant_id)
         return assistant
 
-    def get_messages(self, assistant_id):
-        messages = self.ai.beta.threads.messages.list(assistant_id)
+    def get_messages(self, thread_id):
+        messages = self.ai.beta.threads.messages.list(thread_id=thread_id)
         return messages
 
     def create_thread(self):
         thread = self.ai.beta.threads.create()
         return thread
+
+    def send_message(self, thread_id, message):
+        self.ai.beta.threads.messages.create(thread_id=thread_id, content=message, role="user")
+
+    def run_thread(self, assistant_id, thread_id):
+        return self.ai.beta.threads.runs.create(
+            thread_id=thread_id,
+            assistant_id=assistant_id
+        )
+
+    def is_run_completed(self, thread_id, run_id):
+        while True:
+            run = self.ai.beta.threads.runs.retrieve(
+                thread_id=thread_id,
+                run_id=run_id
+            )
+            if run.status == "completed":
+                break

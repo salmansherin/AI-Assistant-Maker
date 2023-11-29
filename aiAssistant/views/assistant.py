@@ -1,7 +1,7 @@
-from django.http import HttpResponse
+import json
 from django.views import View
 from django.shortcuts import render, redirect
-
+from django.http import JsonResponse
 from services.openai_api import OpenAIApi
 
 
@@ -47,7 +47,28 @@ class EditView(BaseView):
 class ChatView(BaseView):
 
     def get(self, request, assistant_id):
-        # Now you can use the id
         thread = self.ai.create_thread()
-        assistant = self.ai.get_assistant(assistant_id)
-        return render(request, 'assistant/chat.html', {'assistant': assistant, 'thread': thread})
+        messages = self.ai.get_messages(thread.id)
+        messages_list = [message.to_dict() for message in messages.data]
+        context = {
+            'assistant': self.ai.get_assistant(assistant_id),
+            'thread': thread,
+            'messages': messages_list,
+        }
+        return render(request, 'assistant/chat.html', context)
+
+class ChatAjaxView(BaseView):
+
+    def post(self, request):
+        assistant_id = request.META.get('HTTP_ASSISTANT_ID')
+        thread_id = request.META.get('HTTP_THREAD_ID')
+        data = json.loads(request.body)
+        message = data.get('message')
+        # Now you can use the id
+        self.ai.send_message(thread_id, message)
+        run = self.ai.run_thread(assistant_id, thread_id)
+        self.ai.is_run_completed(thread_id, run.id)
+
+        messages = self.ai.get_messages(thread_id)
+        messages_list = [{'role': message.role, 'content': message.content[0].text.value} for message in messages.data]
+        return JsonResponse(messages_list, safe=False)

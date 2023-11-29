@@ -19,19 +19,30 @@ function getCookie(name) {
 }// getCookie
 document.getElementById('chat-form').addEventListener('submit', function (event) {
     event.preventDefault();
+    const threadId = document.getElementById('thread-id').value;
+    const assistantId = document.getElementById('assistant-id').value;
     const messageInput = document.getElementById('message-input');
     const message = messageInput.value;
     messageInput.value = '';
     const chatBox = document.getElementById('chat-box');
-    chatBox.innerHTML += '<p><strong>You:</strong> ' + message + '</p>';
-    fetch('/chat/', {
+    chatBox.innerHTML += '<p><strong style="color: green">USER:</strong> ' + message + '</p>';
+    fetch('/chat', {
         method: 'POST', body: JSON.stringify({message: message}), headers: {
-            'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken')
+            'THREAD-ID': threadId,
+            'ASSISTANT-ID': assistantId,
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
         }
     })
         .then(response => response.json())
         .then(data => {
-            chatBox.innerHTML += '<p><strong>AI:</strong> ' + data.message + '</p>';
+            chatBox.innerHTML = "";
+            console.log(data)
+            data.reverse().map(message => {
+                let color = message.role === 'assistant' ? 'darkred' : 'green';
+                chatBox.innerHTML += '<p><strong style="color: ' + color + '">' + message.role.toString().toUpperCase() + ':</strong> ' + message.content + '</p>';
+            })
             chatBox.scrollTop = chatBox.scrollHeight;
         })
 });
