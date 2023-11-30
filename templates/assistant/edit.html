@@ -12,30 +12,66 @@
 {% block content %}
     <div class="card">
         <div class="card-header">
-            Assistant Information
+            Assistant Settings
             <div class="float-end">
                 <a class="btn btn-primary btn-sm float-right" href="/">All Assistants</a>
             </div>
         </div>
-        <div class="card-body">
-            <form id="assistant-form" data-action="{% url 'edit_assistant' assistant.id %}">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="name" class="form-label required">Name</label>
-                    <input type="text" class="form-control" id="name" value="{{ assistant.name }}" name="name" required>
+        <div class="d-flex align-items-start">
+            <div class="nav flex-column nav-pills me-3" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <button class="nav-link active" id="v-pills-home-tab" data-bs-toggle="pill"
+                        data-bs-target="#v-pills-home" type="button" role="tab" aria-controls="v-pills-home"
+                        aria-selected="true">
+                    Instructions
+                </button>
+                <button class="nav-link" id="v-pills-profile-tab" data-bs-toggle="pill"
+                        data-bs-target="#v-pills-profile" type="button" role="tab" aria-controls="v-pills-profile"
+                        aria-selected="false">Files
+                </button>
+            </div>
+            <div class="tab-content" id="v-pills-tabContent" style="width: 100%">
+                <div class="tab-pane fade show active" id="v-pills-home" role="tabpanel"
+                     aria-labelledby="v-pills-home-tab">
+                    <form id="assistant-form" data-action="{% url 'edit_assistant' assistant.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" id="assistant_id" value="{{ assistant.id }}">
+                        <div class="mb-3">
+                            <label for="name" class="form-label required">Name</label>
+                            <input type="text" class="form-control" id="name" value="{{ assistant.name }}" name="name"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <input type="text" class="form-control" id="description" value="{{ assistant.description }}"
+                                   name="description">
+                        </div>
+                        <div class="mb-3">
+                            <label for="instructions" class="form-label required">Instructions</label>
+                            <textarea class="form-control" id="instructions" name="instructions" rows="3"
+                                      required>{{ assistant.instructions }}</textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary float-end">Submit</button>
+                    </form>
                 </div>
-                <div class="mb-3">
-                    <label for="description" class="form-label">Description</label>
-                    <input type="text" class="form-control" id="description" value="{{ assistant.description }}"
-                           name="description">
+                <div class="tab-pane fade" id="v-pills-profile" role="tabpanel" aria-labelledby="v-pills-profile-tab">
+                    <table class="table table-hover table-striped" id="assistant-files">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>File Name</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <form id="upload-file-form">
+                        {% csrf_token %}
+                        <input type="file" id="file-input" name="file" >
+                    </form>
                 </div>
-                <div class="mb-3">
-                    <label for="instructions" class="form-label required">Instructions</label>
-                    <textarea class="form-control" id="instructions" name="instructions" rows="3"
-                              required>{{ assistant.instructions }}</textarea>
-                </div>
-                <button type="submit" class="btn btn-primary float-end">Submit</button>
-            </form>
+            </div>
         </div>
     </div>
 {% endblock %}

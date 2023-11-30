@@ -7,4 +7,5 @@ urlpatterns = [
     path('chat', assistant.ChatAjaxView.as_view(), name='chat'),
     path('edit/<str:assistant_id>/', assistant.EditView.as_view(), name='edit_assistant'),
     path('test/<str:assistant_id>/', assistant.ChatView.as_view(), name='test_assistant'),
+    path('files/<str:assistant_id>', assistant.AssistantFilesView.as_view(), name='assistant_files'),
 ]

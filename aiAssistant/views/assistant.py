@@ -71,6 +71,21 @@ class ChatView(BaseView):
         return render(request, 'assistant/chat.html', context)
 
 
+class AssistantFilesView(BaseView):
+
+    def get(self, request, assistant_id):
+        files = self.ai.assistant_files(assistant_id)
+
+        return JsonResponse(files.dict(), safe=False)
+
+    def post(self, request, assistant_id):
+        file = request.FILES['file']
+        self.ai.add_assistant_file(assistant_id, file)
+        files = self.ai.assistant_files(assistant_id)
+
+        return JsonResponse(files.dict(), safe=False)
+
+
 class ChatAjaxView(BaseView):
 
     def post(self, request):

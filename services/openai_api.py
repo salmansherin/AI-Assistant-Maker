@@ -22,15 +22,27 @@ class OpenAIApi:
         return completion.choices[0].message.content
 
     def create_assistant(self, name, instructions):
-        assistant = self.ai.beta.assistants.create(name=name, instructions=instructions, model='gpt-4')
+        assistant = self.ai.beta.assistants.create(name=name, instructions=instructions, model='gpt-4-1106-preview',
+                                                   tools=[{'type': 'code_interpreter'}, {'type': 'retrieval'}])
         return assistant
 
     def update_assistant(self, assistant_id, attributes):
 
         assistant = self.ai.beta.assistants.update(assistant_id, name=attributes['name'],
+                                                   model='gpt-4-1106-preview',
                                                    instructions=attributes['instructions'],
-                                                   description=attributes['description'])
+                                                   description=attributes['description'],
+                                                   tools=[{'type': 'code_interpreter'}, {'type': 'retrieval'}])
         return assistant
+
+    def assistant_files(self, assistant_id):
+        files = self.ai.beta.assistants.files.list(assistant_id)
+        return files
+
+    def add_assistant_file(self, assistant_id, file):
+        file_content = file.read()  # Read the content of the uploaded file
+        uploaded_file = self.ai.files.create(file=file_content, purpose="assistants")
+        self.ai.beta.assistants.files.create(assistant_id, file_id=uploaded_file.id)
 
     def list_assistants(self):
         assistants = self.ai.beta.assistants.list()
