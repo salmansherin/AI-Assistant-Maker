@@ -29,7 +29,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=False)
 
-ALLOWED_HOSTS = ['192.168.18.35', 'localhost', '127.0.0.1', '137.184.42.183']
+ALLOWED_HOSTS = ['assistant-demo.empowerbits.com', 'localhost', '127.0.0.1', '137.184.42.183']
 # Application definition
 
 INSTALLED_APPS = [
